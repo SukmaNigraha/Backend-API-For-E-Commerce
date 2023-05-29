@@ -4,18 +4,17 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 
-import javax.imageio.IIOException;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
 public class Main {
     public static void main(String[] args) throws IOException {
         HttpServer httpServer = HttpServer.create(new InetSocketAddress("localhost", 8119), 0);
 
-        httpServer.createContext("/user", new userHandler());
+        httpServer.createContext("/user", new userHandler()); //inisialisasi menggunakan UserHandler
+
         httpServer.setExecutor(Executors.newSingleThreadExecutor());
         httpServer.start();
         System.out.println("connect");
@@ -23,7 +22,6 @@ public class Main {
     }
 
     public static class userHandler implements HttpHandler{
-
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -36,7 +34,7 @@ public class Main {
             if ("GET".equals(exchange.getRequestMethod())) {
                 // send something intresting to user
                 OutputStream outputStream = exchange.getResponseBody();
-                String responseToBeSendBack = "Sudah Masuk";
+                String responseToBeSendBack = SQL.Connection();
                 exchange.sendResponseHeaders(200, responseToBeSendBack.length());
 
 
